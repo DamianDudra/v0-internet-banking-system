@@ -45,22 +45,23 @@ export default function SignUpPage() {
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      console.log('[v0] Starting signup for:', email)
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo:
-            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
-            `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             first_name: firstName,
             last_name: lastName,
           },
         },
       })
+      console.log('[v0] Signup response:', { data, error })
       if (error) throw error
       router.push('/auth/sign-up-success')
     } catch (error: unknown) {
+      console.error('[v0] Signup error:', error)
       setError(
         error instanceof Error
           ? error.message
